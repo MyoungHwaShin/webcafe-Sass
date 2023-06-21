@@ -5,7 +5,11 @@
   padding: rem(16px) rem(20px);
   @include flexbox(column);
   gap: rem(16px);
-
+  
+  //@include respond-until(md) {
+    //background: yellow;
+    
+  //}
   @include mobile {
     background: $dark-brown;
     color: $white;
@@ -16,7 +20,6 @@
     @include containerMax;
   }
 }
-
 // 로고
 .logo {
   width: rem(204px);

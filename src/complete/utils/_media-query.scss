@@ -1,6 +1,13 @@
 @use "sass:map";
+//맵이라는 펑션을 쓰겠다.내장함수 map ... math... 이 내장함수 중 이것을 쓰겠다고 use로 로컬끌어오기를 해줄것
 
-// Breakpoints
+// Breakpoints 변수작성
+//key:value 형식 콤마로 구분
+//아래는 sass 데이터타입 중 map타입
+//string number map list boolean(true false) 가 sass의 형태.
+//변수:1 기본형
+//변수: 1 2 3 4; (리스트형)
+//특정값을 하나만 기억한게 아니라 맵이라는 데이터 타입으로 각 값을 저장한 것
 $breakpoints: (
   sm: 576px,
   md: 768px,
@@ -8,15 +15,22 @@ $breakpoints: (
   xl: 1200px,
   xxl: 1400px,
 );
-
+//funcion 은 믹스인같은 css 코드 조각이 아닌 펑션은 특정 값을 내보내기 위함이다
+//인터폴레이션 #{$breakpoint-name}
+//errorMessage($breakpoint-name)에 특정 값이 담기면
+//#{$breakpoint-name} : 중단점이 유효하지 않습니다." 이걸 리턴해준다 (출력해준다)
+//헤더에 맨위에 @debug errorMessage(test); 를 던지면
+//
 @function errorMessage($breakpoint-name) {
   @return "#{$breakpoint-name} : 중단점이 유효하지 않습니다.";
 }
-
+//아래는 이름이 비슷하네 ? from / untill / range
+//from 내부 미디어쿼리 구문은 
 @mixin respond-from($breakpoint) {
   @if map.has-key($breakpoints, $breakpoint) {
     $breakpoint-value: map.get($breakpoints, $breakpoint);
-
+//map.get은 브레이크포인트에 값을 가져오라 그리고 $breakpoint-value에 담아라
+//그럼 그 값이 밑에  $breakpoint-value보다 크면 실행, 아니면 else 실행
     @media (min-width: $breakpoint-value) {
       @content;
     }
@@ -28,7 +42,8 @@ $breakpoints: (
 @mixin respond-until($breakpoint) {
   @if map.has-key($breakpoints, $breakpoint) {
     $breakpoint-value: map.get($breakpoints, $breakpoint);
-
+//만약 이 조건을 만족시 미디어 쿼리 실행 그렇지 않으면 에러메시지 출력하라
+//has-key($breakpoints, $from)는 ($breakpoints, $from)이 들어있느냐 물어보는 것 
     @media (max-width: ($breakpoint-value - 1)) {
       @content;
     }
@@ -36,12 +51,14 @@ $breakpoints: (
     @error errorMessage($breakpoint);
   }
 }
-
+//얘는 위에 두가지와 다르게 중간점을 찾고자 한다.
+//키값을 인자로 2개 받아서 그 중간을 쓸 것
+//작은 것부터 큰 것까지로 순서대로 해야함
 @mixin respond-range($from, $until) {
   @if map.has-key($breakpoints, $from) and map.has-key($breakpoints, $until) {
     $from-value: map.get($breakpoints, $from);
     $until-value: map.get($breakpoints, $until);
-
+//민위드 부터 맥스 위드 까지 구간생성
     @media (min-width: $from-value) and (max-width: ($until-value - 1)) {
       @content;
     }

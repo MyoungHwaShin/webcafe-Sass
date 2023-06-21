@@ -10,6 +10,8 @@
   @include desktop {
     background: $secondary-color;
     @include boxSizeFull;
+    
+   
   }
 
   &__list {
